@@ -85,4 +85,12 @@ public class Usuario {
     public void setCredentials(Credenciales credentials) {
         this.credentials = credentials;
     }
+
+    public void descontarDinero(double dinero){
+        this.userCoins = this.userCoins - dinero;
+    }
+
+    public void addObjetoComprado(ObjetoTienda obj){
+        this.objectsBought.add(obj);
+    }
 }

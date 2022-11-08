@@ -1,6 +1,7 @@
 package Managers;
 
 import Entities.*;
+import Entities.ValueObjects.Credenciales;
 import Main.*;
 import Managers.*;
 import Services.*;
@@ -12,15 +13,134 @@ public class ObjetoManagerImpl implements ObjetoManager{
 
     // ----------------------------------------------------------------------------------------------------
 
-    // ATRIBUTOS.
-
-    List<Product> products;
-    Queue<Order> orders;
-    HashMap<String,User> users;
+    List<ObjetoTienda> objetos;
+    HashMap<String,Usuario> usuarios;
 
     // ----------------------------------------------------------------------------------------------------
 
-    // EXTRAS API REST.
+    // Constructor del XManagerImplementation.
+    public ObjetoManagerImpl(){
+        this.objetos = new ArrayList<>();
+        this.usuarios = new HashMap<>();
+    }
+
+    // ----------------------------------------------------------------------------------------------------
+
+    // Funciones básicas de la implementación.
+
+    public int numObjetos(){
+        return this.objetos.size();
+    }
+
+    public int numUsuarios(){
+        return this.objetos.size();
+    }
+
+    // ----------------------------------------------------------------------------------------------------
+
+    // Funciones del ObjectManager implementadas.
+
+    @Override
+    public int registerUser(String username, String userSurname, String birthDate, String email, String password) {
+        String identificador = Integer.toString(this.usuarios.size());
+        Usuario X = new Usuario(identificador, username, userSurname, birthDate, new Credenciales(email, password));
+        this.usuarios.put(identificador, X);
+        // Búsqueda en el Hashmap de "usuarios" para encontrar si ya hay algún usuario con el mismo email.
+        // "0" se puede, "1" ya hay un usuario con ese mail.
+        int verificador = 0;
+        int numUsers = this.usuarios.size();
+        for (int i=0; i<numUsers; i++){
+            String idHashmap = Integer.toString(i);
+            if (Objects.equals(this.usuarios.get(idHashmap).getCredentials().getEmail(), email)){
+                verificador = 1;
+            }
+        }
+        return verificador;
+    }
+
+    @Override
+    public List<Usuario> usersByAlphabetOrder() {
+        public List<Usuario> usersByAlphabet(){
+            List<Usuario> aux = new ArrayList<>(this.usuarios.values());
+            aux.sort((Usuario p1,Usuario p2)->{
+                int aux1 = String.CASE_INSENSITIVE_ORDER.compare(p1.getUserSurname(), p2.getUserSurname());
+                if (aux1==0) {
+                    aux1 = String.CASE_INSENSITIVE_ORDER.compare(p1.getUsername(), p2.getUsername());
+                }
+                return aux1;
+            });
+            return aux;
+        }
+    }
+
+    @Override
+    public int userLogin(String email, String password) {
+        int loginPossible = 1;
+        Credenciales enteredCredentials = new Credenciales(email, password);
+        // Búsqueda en el Hashmap de credenciales por si hay alguna que coincide con las nuestras.
+        // "0" se puede, "1" ya hay un usuario con ese mail.
+        int numUsers = this.usuarios.size();
+        for (int i=0; i<numUsers; i++){
+            String idHashmap = Integer.toString(i);
+            if (Objects.equals(this.usuarios.get(idHashmap).getCredentials(), enteredCredentials)){
+                loginPossible = 0;
+            }
+        }
+        return loginPossible;
+    }
+
+    @Override
+    public void addObjectToShop(String id, String name, String description, double coins) {
+        ObjetoTienda objeto = new ObjetoTienda(id, name, description, coins);
+        this.objetos.add(objeto);
+    }
+
+    @Override
+    public List<ObjetoTienda> objectsByDescendentPrice() {
+        this.objetos.sort((ObjetoTienda p2,ObjetoTienda p1)->Double.compare(p1.getObjectCoins(),p2.getObjectCoins()));
+        return this.objetos;
+    }
+
+    @Override
+    public int buyObjectByUser(String objectId, String usuarioId) { // "0" se puede, "1" no existe el usuario, "2" no hay saldo suficiente.
+        int verificador = 0;
+        // Verificamos que exista el usuario.
+        int numeroUsuarios = this.usuarios.size(); // Size = 3 es que hay ID = 0,1,2.
+        if ((0 <= Integer.parseInt(usuarioId))&&(Integer.parseInt(usuarioId) < numeroUsuarios)) {  // Existe.
+            // Quiere decir que el usuario existe. Seguimos.
+            // Localizamos el objeto y verificamos que el usuario tiene saldo suficiente para comprarlo.
+            int numObj = this.objetos.size();
+            for (int i=0; i<numObj; i++) {
+                // Localizamos nuestro objeto.
+                if (Objects.equals(this.objetos.get(i).getObjectId(), objectId)) {
+                    if (this.objetos.get(i).getObjectCoins() <= this.usuarios.get(usuarioId).getUserCoins()) {
+                        // Quiere decir que el usuario lo puede comprar.
+                        // Pasamos ya a hacer la compra (es decir, descontar el precio del sueldo del usuario y añadir el objeto a su lista).
+                        this.usuarios.get(usuarioId).addObjetoComprado(this.objetos.get(i));
+                        this.usuarios.get(usuarioId).descontarDinero(this.objetos.get(i).getObjectCoins());
+                    }
+                    else {
+                        // Quiere decir que el saldo del usuario no es suficiente, por lo tanto no se puede comprar.
+                        verificador = 2;
+                    }
+                }
+            }
+        }
+        else {
+            // Quiere decir que el usuario no existe. Paramos.
+            verificador = 1;
+        }
+        return verificador;
+    }
+
+    @Override
+    public List<ObjetoTienda> objectBoughtByUser(String userId) {
+        return usuarios.get(userId).getObjectsBought();
+    }
+
+    // ----------------------------------------------------------------------------------------------------
+
+    // Extra para API REST.
 
     private static ObjetoManager instance; // Creamos la interfaz de product manager.
 
@@ -38,121 +158,4 @@ public class ObjetoManagerImpl implements ObjetoManager{
     }
 
     // ----------------------------------------------------------------------------------------------------
-
-    public ObjetoManagerImpl(){
-        this.products = new ArrayList<>();
-        this.orders = new LinkedList<>();
-        this.users = new HashMap<>();
-    }
-
-    // ----------------------------------------------------------------------------------------------------
-
-    // FUNCTIONS RELATED WITH PRODUCTS.
-
-    // > Function 1.
-    @Override
-    public List<Product> productsByPrice() {
-        this.products.sort((Product p1,Product p2)->Double.compare(p1.getPrice(),p2.getPrice()));
-        return this.products;
-    }
-
-    // > Function 2.
-    @Override
-    public List<Product> productsBySales() {
-        this.products.sort((Product p1,Product p2)->(p1.getNumSales() - p2.getNumSales())); // ESTO.
-        return this.products;
-    }
-
-    // > Function 3.
-    @Override
-    public void addProduct(String productId, String name, double price) {
-        Product p = new Product(productId, name, price);
-        this.products.add(p); // HERE.
-    }
-
-    // > Function 4.
-    @Override
-    public Product getProduct(String productId) {
-        Product X = new Product();
-        for (int i=0; i<this.products.size(); i++){
-            if (Objects.equals(this.products.get(i).getProductId(), productId)){
-                X = this.products.get(i);
-            }
-        }
-        return X;
-    }
-
-    // > Function 5.
-    @Override
-    public int numProducts() {
-        return this.products.size(); // HERE.
-    }
-
-    // ----------------------------------------------------------------------------------------------------
-
-    // FUNCTIONS RELATED WITH ORDERS.
-
-    // > Function 6.
-    @Override
-    public void addOrder(Order order) {
-        this.orders.add(order);
-    }
-
-    // > Function 7.
-    @Override
-    public Order processOrder() {
-        Order ord = orders.poll(); // Treiem una ordre de la cua.
-        this.users.get(ord.getUserId()).getProcessedOrders().add(ord); // Añadimos la órden al usuario que la hace.
-        for (int i=0; i<ord.getElements().size(); i++){ // Recorremos todos los elementos/productos de la órden.
-            for (int j=0; j<this.products.size(); j++){
-                if (Objects.equals(this.products.get(j).getProductId(), ord.getElements().get(i).getProduct())){
-                    this.products.get(j).setNumSales(this.products.get(j).getNumSales() + ord.getElements().get(i).getQuantity());
-                }
-            }
-        }
-        return ord;
-    }
-
-    // > Function 8.
-    @Override
-    public List<Order> ordersByUser(String userId) {
-        return this.users.get(userId).getProcessedOrders(); // HERE.
-    }
-
-    // > Function 9.
-    @Override
-    public int numOrders() {
-        return this.orders.size();
-    }
-
-    // > Function 10.
-    @Override
-    public int numSales(String b001) {
-        int number = 0;
-        for (int i=0; i<this.products.size(); i++){
-            if (Objects.equals(this.products.get(i).getProductId(), b001)){
-                number = this.products.get(i).getNumSales();
-            }
-        }
-        return number;
-    }
-
-    // ----------------------------------------------------------------------------------------------------
-
-    // FUNCTIONS RELATED WITH USERS.
-
-    // > Function 11.
-    @Override
-    public void addUser(String s, String name, String surname) {
-        this.users.put(s, new User(s, name, surname));
-    }
-
-    // > Function 12.
-    @Override
-    public int numUsers() {
-        return this.users.size();
-    }
-
-    // ----------------------------------------------------------------------------------------------------
-
 }

@@ -1,67 +1,32 @@
 package Managers;
 
 import Entities.*;
+import Entities.ValueObjects.Credenciales;
 import Main.*;
 import Managers.*;
 import Services.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public interface ObjetoManager {
+    public void registerUser(String userId, String username, String userSurname, String birthDate, String email, String password);
+
+    public List<Usuario> usersByAlphabetOrder();
+
+    public boolean userLogin(String email, String password);
+
+    public void addObjectToShop(String id, String name, String description, double coins);
+
+    public List<ObjetoTienda> objectsByDescendentPrice();
+
+    public int buyObjectByUser(String objectId, String userId); // "0" se puede, "1" no existe el usuario, "2" no hay saldo suficiente.
+
+    public List<ObjetoTienda> objectBoughtByUser(String userId);
 
     // ----------------------------------------------------------------------------------------------------
 
-    // FUNCTIONS RELATED WITH PRODUCTS.
-
-    // > Function 1.
-    public List<Product> productsByPrice();
-
-    // > Function 2.
-    public List<Product> productsBySales();
-
-    // > Function 3.
-    public void addProduct(String productId, String name, double price);
-
-    // > Function 4.
-    public Product getProduct(String productId);
-
-    // > Function 5.
-    public int numProducts();
-
-    // ----------------------------------------------------------------------------------------------------
-
-    // FUNCTIONS RELATED WITH ORDERS.
-
-    // > Function 6.
-    public void addOrder(Order order);
-
-    // > Function 7.
-    public Order processOrder();
-
-    // > Function 8.
-    public List<Order> ordersByUser(String userId);
-
-    // > Function 9.
-    public int numOrders();
-
-    // > Function 10.
-    public int numSales(String b001);
-
-    // ----------------------------------------------------------------------------------------------------
-
-    // FUNCTIONS RELATED WITH USERS.
-
-    // > Function 11.
-    public void addUser(String s, String name, String surname);
-
-    // > Function 12.
-    public int numUsers();
-
-    // ----------------------------------------------------------------------------------------------------
-
-    // EXTRAS API REST.
-
-    public int size();
+    public int size(); // Extra para API REST.
 
     // ----------------------------------------------------------------------------------------------------
 }

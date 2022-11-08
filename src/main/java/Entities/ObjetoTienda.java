@@ -12,9 +12,9 @@ public class ObjetoTienda {
     String objectId;
     String objectName;
     String objectDescription;
-    int objectCoins;
+    double objectCoins;
 
-    public ObjetoTienda(String objectId, String objectName, String objectDescription, int objectCoins) {
+    public ObjetoTienda(String objectId, String objectName, String objectDescription, double objectCoins) {
         this.objectId = objectId;
         this.objectName = objectName;
         this.objectDescription = objectDescription;
@@ -47,11 +47,11 @@ public class ObjetoTienda {
         this.objectDescription = objectDescription;
     }
 
-    public int getObjectCoins() {
+    public double getObjectCoins() {
         return objectCoins;
     }
 
-    public void setObjectCoins(int objectCoins) {
+    public void setObjectCoins(double objectCoins) {
         this.objectCoins = objectCoins;
     }
 }

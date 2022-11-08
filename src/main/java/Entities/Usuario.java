@@ -14,7 +14,7 @@ public class Usuario {
     String username;
     String userSurname;
     String birthDate;
-    int userCoins;
+    double userCoins;
     List<ObjetoTienda> objectsBought;
     Credenciales credentials;
 
@@ -62,11 +62,11 @@ public class Usuario {
         this.birthDate = birthDate;
     }
 
-    public int getUserCoins() {
+    public double getUserCoins() {
         return userCoins;
     }
 
-    public void setUserCoins(int userCoins) {
+    public void setUserCoins(double userCoins) {
         this.userCoins = userCoins;
     }
 

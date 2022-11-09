@@ -18,7 +18,8 @@ public class ObjetoManagerImpl implements ObjetoManager{
 
     // ----------------------------------------------------------------------------------------------------
 
-    // Constructor del XManagerImplementation.
+    // CONSTRUCTOR DEL XManagerImplementation.
+
     public ObjetoManagerImpl(){
         this.objetos = new ArrayList<>();
         this.usuarios = new HashMap<>();
@@ -26,63 +27,73 @@ public class ObjetoManagerImpl implements ObjetoManager{
 
     // ----------------------------------------------------------------------------------------------------
 
-    // Funciones básicas de la implementación.
+    // FUNCIONES BÁSICAS DE LA IMPLEMENTACIÓN.
 
     public int numObjetos(){
         return this.objetos.size();
     }
 
     public int numUsuarios(){
-        return this.objetos.size();
+        return this.usuarios.size();
     }
 
     // ----------------------------------------------------------------------------------------------------
 
-    // Funciones del ObjectManager implementadas.
+    // FUNCIONES DEL ObjectManager IMPLEMENTADAS.
 
     @Override
     public int registerUser(String username, String userSurname, String birthDate, String email, String password) {
         String identificador = Integer.toString(this.usuarios.size());
         Usuario X = new Usuario(identificador, username, userSurname, birthDate, new Credenciales(email, password));
-        this.usuarios.put(identificador, X);
+
         // Búsqueda en el Hashmap de "usuarios" para encontrar si ya hay algún usuario con el mismo email.
         // "0" se puede, "1" ya hay un usuario con ese mail.
+
         int verificador = 0;
         int numUsers = this.usuarios.size();
-        for (int i=0; i<numUsers; i++){
-            String idHashmap = Integer.toString(i);
-            if (Objects.equals(this.usuarios.get(idHashmap).getCredentials().getEmail(), email)){
-                verificador = 1;
+
+        if (numUsers == 0){ // Si no hay ningún usuario, se puede añadir directamente sin hacer la comprobación.
+            this.usuarios.put(identificador, X);
+        }
+        else{
+            for (int i=0; i<numUsers; i++){
+                String idHashmap = Integer.toString(i);
+                if (Objects.equals(this.usuarios.get(idHashmap).getCredentials().getEmail(), email)){
+                    verificador = 1;
+                }
+            }
+            if (verificador == 0){ // Si durante la búsqueda no se ha encontrado ningún email igual, se introduce.
+                this.usuarios.put(identificador, X);
             }
         }
+
         return verificador;
     }
 
     @Override
     public List<Usuario> usersByAlphabetOrder() {
-        public List<Usuario> usersByAlphabet(){
-            List<Usuario> aux = new ArrayList<>(this.usuarios.values());
-            aux.sort((Usuario p1,Usuario p2)->{
-                int aux1 = String.CASE_INSENSITIVE_ORDER.compare(p1.getUserSurname(), p2.getUserSurname());
-                if (aux1==0) {
-                    aux1 = String.CASE_INSENSITIVE_ORDER.compare(p1.getUsername(), p2.getUsername());
-                }
-                return aux1;
-            });
-            return aux;
-        }
+        List<Usuario> aux = new ArrayList<>(this.usuarios.values());
+        aux.sort((Usuario p1,Usuario p2)->{
+            int aux1 = String.CASE_INSENSITIVE_ORDER.compare(p1.getUserSurname(), p2.getUserSurname());
+            if (aux1==0) {
+                aux1 = String.CASE_INSENSITIVE_ORDER.compare(p1.getUsername(), p2.getUsername());
+            }
+            return aux1;
+        });
+        return aux;
     }
 
     @Override
     public int userLogin(String email, String password) {
         int loginPossible = 1;
-        Credenciales enteredCredentials = new Credenciales(email, password);
+
         // Búsqueda en el Hashmap de credenciales por si hay alguna que coincide con las nuestras.
         // "0" se puede, "1" ya hay un usuario con ese mail.
+
         int numUsers = this.usuarios.size();
         for (int i=0; i<numUsers; i++){
             String idHashmap = Integer.toString(i);
-            if (Objects.equals(this.usuarios.get(idHashmap).getCredentials(), enteredCredentials)){
+            if ((this.usuarios.get(idHashmap).getCredentials().getEmail() == email)&&(this.usuarios.get(idHashmap).getCredentials().getPassword() == password)) {
                 loginPossible = 0;
             }
         }
@@ -140,7 +151,7 @@ public class ObjetoManagerImpl implements ObjetoManager{
 
     // ----------------------------------------------------------------------------------------------------
 
-    // Extra para API REST.
+    // EXTRA PARA EL API REST.
 
     private static ObjetoManager instance; // Creamos la interfaz de product manager.
 
@@ -152,7 +163,7 @@ public class ObjetoManagerImpl implements ObjetoManager{
     }
 
     public int size(){
-        int ret = this.products.size();
+        int ret = this.objetos.size();
         logger.info("size " + ret);
         return ret;
     }

@@ -11,133 +11,145 @@ import java.util.List;
 
 public class ObjetoManagerImplTest {
 
-    ObjetoManager pm;
+    ObjetoManager om;
+
+    // ----------------------------------------------------------------------------------------------------
+
+    // (1) MÉTODO "setUp" QUE INICIALIZA LA ESTRUCTURA DE DATOS.
 
     @Before
     public void setUp() {
-        pm = new ObjetoManagerImplTest();
-        pm.addUser("1111111", "Juan", "lopez");
-        pm.addUser("2222222",  "David", "Rincon");
-        pm.addUser("3333333",  "Juan", "Hernández");
+        this.om = new ObjetoManagerImpl();
 
-        pm.addProduct("B001", "Coca cola", 2);
-        pm.addProduct("C002", "Café amb gel", 1.5);
-        pm.addProduct("A002", "Donut", 2.25);
-        pm.addProduct("A003", "Croissant", 1.25);
+        // public int registerUser(String username, String userSurname, String birthDate, String email, String password);
+        this.om.registerUser("Marc", "Moran", "28/10/2001", "marcmoran@gmail.com", "28102001");
+        this.om.registerUser("Victor", "Fernandez", "13/06/2001", "victorfernandez@gmail.com", "13062001");
+        this.om.registerUser("Eloi", "Moncho", "05/08/2001", "eloimoncho@gmail.com", "05082001");
 
-        prepareOrders();
+        // public void addObjectToShop(String id, String name, String description, double coins);
+        this.om.addObjectToShop("A001", "FCB", "Primera Equipación Fan", 30);
+        this.om.addObjectToShop("B001", "ATM", "Primera Equipación Jugador", 35);
+        this.om.addObjectToShop("C001", "BRUGGE", "Primera Equipación Fan (Ferran Jutgol)", 40);
     }
+
+    // ----------------------------------------------------------------------------------------------------
+
+    // (2) MÉTODO "tearDown" QUE LIBERA LOS RECURSOS.
 
     @After
     public void tearDown() {
-        this.pm = null;
+        this.om = null;
     }
 
-    private void prepareOrders() {
-        Order o1 = new Order("1111111");
-        o1.addLP(3, "B001");
-        o1.addLP(2, "C002");
+    // ----------------------------------------------------------------------------------------------------
 
-        Order o2 = new Order("1111111");
-        o2.addLP(3, "A002");
-        o2.addLP(1, "B001");
+    // (3) MÉTODO DE TEST PARA CADA UNA DE LAS FUNCIONES DEL CÓDIGO.
 
-        Order o3 = new Order("2222222");
-        o3.addLP(3, "B001");
-        o3.addLP(2, "A002");
-
-        Assert.assertEquals(0, this.pm.numOrders());
-        this.pm.addOrder(o1);
-        Assert.assertEquals(1, this.pm.numOrders());
-        this.pm.addOrder(o2);
-        Assert.assertEquals(2, this.pm.numOrders());
-        this.pm.addOrder(o3);
-        Assert.assertEquals(3, this.pm.numOrders());
-    }
+    // TEST 1: Registrar un usuario.
+    // public int registerUser(String username, String userSurname, String birthDate, String email, String password);
+    // "0" se puede, "1" ya hay un usuario con ese email.
 
     @Test
-    public void testAddOrder() {
-        Assert.assertEquals(3, this.pm.numUsers());
-        Assert.assertEquals(4, this.pm.numProducts());
-        Assert.assertEquals(3, this.pm.numOrders());
-        // ...
-        Order o4 = new Order("2222222");
-        o4.addLP(3, "B001");
-        o4.addLP(2, "A003");
-        this.pm.addOrder(o4);
+    public void testRegisterUser() {
+        // Se añade un usuario correctamente.
+        Assert.assertEquals(3, this.om.numUsuarios());
+        int verificador = this.om.registerUser("Alba", "Serra", "23/06/2001", "albaserra@gmail.com", "23062001");
+        Assert.assertEquals(4, this.om.numUsuarios());
+        Assert.assertEquals(0, verificador);
 
-        Assert.assertEquals(4, this.pm.numOrders());
+        // Ya hay un usuario con ese email.
+        verificador = this.om.registerUser("El", "Oimoncho", "16/11/2001", "eloimoncho@gmail.com", "16112001");
+        Assert.assertEquals(4, this.om.numUsuarios());
+        Assert.assertEquals(1, verificador);
     }
+
+    // TEST 2: Obtener una lista de usuarios registrados, ordenada por órden alfabético.
+    // public List<Usuario> usersByAlphabetOrder();
 
     @Test
-    public void processOrderTest() {
-        Assert.assertEquals(3, this.pm.numUsers());
-        Assert.assertEquals(4, this.pm.numProducts());
-        Assert.assertEquals(3, this.pm.numOrders());
+    public void testUsersByAlphabetOrder() {
+        List<Usuario> usuaris = this.om.usersByAlphabetOrder();
 
-        Order order1 = this.pm.processOrder();
-        Assert.assertEquals(2, this.pm.numOrders());
-        Assert.assertEquals(3, order1.getLP(0).getQuantity());
-        Assert.assertEquals(2, order1.getLP(1).getQuantity());
-        Assert.assertEquals(3, this.pm.numSales("B001"));
+        Assert.assertEquals("Fernandez", usuaris.get(0).getUserSurname());
+        Assert.assertEquals("Victor", usuaris.get(0).getUsername());
 
-        Order order2 = this.pm.processOrder();
-        Assert.assertEquals(1, this.pm.numOrders());
-        Assert.assertEquals(4, this.pm.numSales("B001"));
+        Assert.assertEquals("Moncho", usuaris.get(1).getUserSurname());
+        Assert.assertEquals("Eloi", usuaris.get(1).getUsername());
 
-        Order order3 = this.pm.processOrder();
-        Assert.assertEquals(0, this.pm.numOrders());
-        Assert.assertEquals(7, this.pm.numSales("B001"));
+        Assert.assertEquals("Moran", usuaris.get(2).getUserSurname());
+        Assert.assertEquals("Marc", usuaris.get(2).getUsername());
     }
 
+    // TEST 3: Hacer el login de un usuario.
+    // public int userLogin(String email, String password);
+    // "0" se puede, "1" el login no es correcto.
 
     @Test
-    public void productsSortByPrice() {
-        List<Product> products = this.pm.productsByPrice();
+    public void testUserLogin() {
+        // Login correcto.
+        int verificador = this.om.userLogin("marcmoran@gmail.com", "28102001");
+        Assert.assertEquals(0, verificador);
 
-        Assert.assertEquals("A003", products.get(0).getProductId());
-        Assert.assertEquals(1.25, products.get(0).getPrice(), 0);
-
-        Assert.assertEquals("C002", products.get(1).getProductId());
-        Assert.assertEquals(1.5, products.get(1).getPrice(), 0);
-
-        Assert.assertEquals("B001", products.get(2).getProductId());
-        Assert.assertEquals(2, products.get(2).getPrice(), 0);
-
-        Assert.assertEquals("A002", products.get(3).getProductId());
-        Assert.assertEquals(2.25, products.get(3).getPrice(), 0);
+        // Login incorrecto.
+        verificador = this.om.userLogin("marcmoran@gmail.com", "12345678");
+        Assert.assertEquals(1, verificador);
     }
+
+    // TEST 4: Añadir un nuevo objeto a la tienda.
+    // public void addObjectToShop(String id, String name, String description, double coins);
 
     @Test
-    public void productsSortByNumSales() {
-        processOrderTest();
-
-        List<Product> products = this.pm.productsBySales();
-        Assert.assertEquals("A003", products.get(0).getProductId());
-        Assert.assertEquals("Croissant", products.get(0).getDescription());
-        Assert.assertEquals(0, products.get(0).getNumSales());
-
-        Assert.assertEquals("C002", products.get(1).getProductId());
-        Assert.assertEquals("Café amb gel", products.get(1).getDescription());
-        Assert.assertEquals(2, products.get(1).getNumSales());
-
-        Assert.assertEquals("A002", products.get(2).getProductId());
-        Assert.assertEquals("Donut", products.get(2).getDescription());
-        Assert.assertEquals(5, products.get(2).getNumSales());
-
-        Assert.assertEquals("B001", products.get(3).getProductId());
-        Assert.assertEquals("Coca cola", products.get(3).getDescription());
-        Assert.assertEquals(7, products.get(3).getNumSales());
+    public void testAddObjectToShop() {
+        Assert.assertEquals(3, this.om.numObjetos());
+        this.om.addObjectToShop("A002", "FCB", "Primera Equipación Jugador", 35);
+        Assert.assertEquals(4, this.om.numObjetos());
     }
+
+    // TEST 5: Obtener una lista de objetos ordenados por precio (de mayor a menor).
+    // public List<ObjetoTienda> objectsByDescendentPrice();
 
     @Test
-    public void ordersByUserTest() {
-        processOrderTest();
-        List<Order> orders1 = this.pm.ordersByUser("1111111");
-        Assert.assertEquals(2, orders1.size());
+    public void testObjectsByDescendentPrice() {
+        List<ObjetoTienda> objectes = this.om.objectsByDescendentPrice();
 
-        List<Order> orders2 = this.pm.ordersByUser("2222222");
-        Assert.assertEquals(1, orders2.size());
+        Assert.assertEquals("BRUGGE", objectes.get(0).getObjectName());
+        Assert.assertEquals( 40, objectes.get(0).getObjectCoins(), 0); // ¿?
 
+        Assert.assertEquals("ATM", objectes.get(1).getObjectName());
+        Assert.assertEquals( 35, objectes.get(1).getObjectCoins(), 0); // ¿?
+
+        Assert.assertEquals("FCB", objectes.get(2).getObjectName());
+        Assert.assertEquals( 30, objectes.get(2).getObjectCoins(), 0); // ¿?
     }
+
+    // TEST 6: Compra de un objeto por parte de un usuario.
+    // public int buyObjectByUser(String objectId, String userId);
+    // "0" se puede, "1" no existe el usuario, "2" no hay saldo suficiente.
+
+    @Test
+    public void testBuyObjectByUser() {
+        // Se hace la compra correctamente (devuelve 0).
+        int verificador = this.om.buyObjectByUser("C001", "1");
+        Assert.assertEquals(0, verificador);
+
+        // No existe el usuario solicitado (devuelve 1).
+        verificador = this.om.buyObjectByUser("C001", "10");
+        Assert.assertEquals(1, verificador);
+
+        // El usuario no tiene saldo suficiente para hacer la compra (devuelve 2).
+        verificador = this.om.buyObjectByUser("C001", "1");
+        Assert.assertEquals(2, verificador);
+    }
+
+    // TEST 7: Obtener una lista de los objetos comprados por un usuario.
+    // public List<ObjetoTienda> objectBoughtByUser(String userId);
+
+    @Test
+    public void testObjectsBoughtByUser() {
+        List<ObjetoTienda> comprados = this.om.objectBoughtByUser("1");
+        Assert.assertEquals(0, comprados.size());
+    }
+
+    // ----------------------------------------------------------------------------------------------------
+
 }

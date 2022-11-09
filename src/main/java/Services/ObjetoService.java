@@ -1,9 +1,8 @@
 package Services;
 
-import Entities.*;
-import Main.*;
+import Entities.ObjetoTienda;
+import Entities.Usuario;
 import Managers.*;
-import Services.*;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,29 +13,76 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 
-@Api(value = "/products", description = "Endpoint to Product Service") // "products"
-@Path("/products")
+
+@Api(value = "/objeto", description = "Endpoint to Objeto Service") // "objeto"
+@Path("/objeto")
 
 public class ObjetoService {
 
+
     // ----------------------------------------------------------------------------------------------------
 
-    private ProductManager tm;
+    private ObjetoManager om;
 
-    public ProductService() {
-        this.tm = ProductManagerImpl.getInstance();
-        if (tm.size()==0) {
-            this.tm.addProduct("B001", "Coca cola", 2);
-            this.tm.addProduct("C002", "Café amb gel", 1.5);
-            this.tm.addProduct("A002", "Donut", 2.25);
-            this.tm.addProduct("A003", "Croissant", 1.25);
+    public ObjetoService() {
+        this.om = ObjetoManagerImpl.getInstance();
+        if (om.size()==0) {
+            this.om.addObjectToShop("A001", "FCB", "Primera Equipación Fan", 30);
+            this.om.addObjectToShop("B001", "ATM", "Primera Equipación Jugador", 35);
+            this.om.addObjectToShop("C001", "BRUGGE", "Primera Equipación Fan (Ferran Jutgol)", 40);
         }
     }
 
+    /*
     // ----------------------------------------------------------------------------------------------------
+
+    // OPERACIÓN 1: Registrar un usuario.
+    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // ACLARACIONES: "0" se puede, "1" ya hay un usuario con ese mail.
+
+
+
+    // OPERACIÓN 2: Obtener una lista de usuarios registrados, ordenada por órden alfabético.
+    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // ACLARACIONES: -
+
+
+
+    // OPERACIÓN 3: Hacer el login de un usuario.
+    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // ACLARACIONES: "0" se puede, "1" el login no es correcto.
+
+
+
+    // OPERACIÓN 4: Añadir un nuevo objeto a la tienda.
+    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // ACLARACIONES: -
+
+
+
+    // OPERACIÓN 5: Obtener una lista de objetos ordenados por precio (de mayor a menor).
+    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // ACLARACIONES: -
+
+
+
+    // OPERACIÓN 6: Compra de un objeto por parte de un usuario.
+    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // ACLARACIONES: "0" se puede, "1" no existe el usuario, "2" no hay saldo suficiente.
+
+
+
+    // OPERACIÓN 7: Obtener una lista de los objetos comprados por un usuario.
+    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // ACLARACIONES: -
+
+
+
+    // ----------------------------------------------------------------------------------------------------
+
+    // OLD VERSION (PRODUCTS) ...
 
     // IMPLEMENTACIÓN 1: Obtener todos los productos ordenados por Price.
     // Tipo: GET.
@@ -49,7 +95,7 @@ public class ObjetoService {
     @Path("/price")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProductsByPrice() {
-        List<Product> prodByPrices = this.tm.productsByPrice();
+        List<Product> prodByPrices = this.om.productsByPrice();
         GenericEntity<List<Product>> entity = new GenericEntity<List<Product>>(prodByPrices) {};
         return Response.status(201).entity(entity).build(); // OK.
     }
@@ -67,7 +113,7 @@ public class ObjetoService {
     @Path("/sales")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProductsBySales() {
-        List<Product> prodBySales = this.tm.productsBySales();
+        List<Product> prodBySales = this.om.productsBySales();
         GenericEntity<List<Product>> entity = new GenericEntity<List<Product>>(prodBySales) {};
         return Response.status(201).entity(entity).build(); // OK.
     }
@@ -89,7 +135,7 @@ public class ObjetoService {
         if (ord.getUserId()==null || ord.getElements()==null) {
             return Response.status(500).entity(ord).build();
         }
-        this.tm.addOrder(ord);
+        this.om.addOrder(ord);
         return Response.status(201).entity(ord).build(); // OK.
     }
 
@@ -106,7 +152,7 @@ public class ObjetoService {
     })
     @Path("/order")
     public Response processOrder() {
-        Order ordProc = this.tm.processOrder();
+        Order ordProc = this.om.processOrder();
         if (ordProc == null) {
             return Response.status(404).build();
         }
@@ -128,7 +174,7 @@ public class ObjetoService {
     @Path("/order/{usedId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllProcessedOrders(String identificador) {
-        List<Order> ordProcUser = this.tm.ordersByUser(identificador);
+        List<Order> ordProcUser = this.om.ordersByUser(identificador);
         if (ordProcUser == null) {
             return Response.status(404).build();
         }
@@ -140,4 +186,7 @@ public class ObjetoService {
     }
 
     // ----------------------------------------------------------------------------------------------------
+
+
+     */
 }

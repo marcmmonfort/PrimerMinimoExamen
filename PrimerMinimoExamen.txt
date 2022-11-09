@@ -1,5 +1,6 @@
->> Nombre:	Pepito Grillo
->> github: 	https://github.com/jlopezr/rest-example/
+>> Nombre:	Marc Moran Monfort
+>> Grupo:	5M11
+>> github: 	https://github.com/marcmmonfort/PrimerMinimoExamen
 
 >> PARTE I ...
 	>> (1) El package "Entities" contiene las entidades principales: "".

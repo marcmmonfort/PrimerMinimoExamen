@@ -43,6 +43,7 @@ public class ObjetoManagerImpl implements ObjetoManager{
 
     @Override
     public int registerUser(String username, String userSurname, String birthDate, String email, String password) {
+        logger.info("Register user with info: "+username+", "+userSurname);
         String identificador = Integer.toString(this.usuarios.size());
         Usuario X = new Usuario(identificador, username, userSurname, birthDate, new Credenciales(email, password));
 
@@ -64,6 +65,7 @@ public class ObjetoManagerImpl implements ObjetoManager{
             }
             if (verificador == 0){ // Si durante la búsqueda no se ha encontrado ningún email igual, se introduce.
                 this.usuarios.put(identificador, X);
+                logger.info("User was added");
             }
         }
 

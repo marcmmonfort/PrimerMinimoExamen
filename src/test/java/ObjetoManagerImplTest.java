@@ -8,8 +8,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 public class ObjetoManagerImplTest {
+
+    final static Logger logger = Logger.getLogger(ObjetoManagerImpl.class);
 
     ObjetoManager om;
 
@@ -24,7 +27,7 @@ public class ObjetoManagerImplTest {
         // public int registerUser(String username, String userSurname, String birthDate, String email, String password);
         this.om.registerUser("Marc", "Moran", "28/10/2001", "marcmoran@gmail.com", "28102001");
         this.om.registerUser("Victor", "Fernandez", "13/06/2001", "victorfernandez@gmail.com", "13062001");
-        this.om.registerUser("Eloi", "Moncho", "05/08/2001", "eloimoncho@gmail.com", "05082001");
+        this.om.registerUser("Eloi", "Moncho", "28/08/2001", "eloimoncho@gmail.com", "28082001");
 
         // public void addObjectToShop(String id, String name, String description, double coins);
         this.om.addObjectToShop("A001", "FCB", "Primera Equipación Fan", 30);
@@ -51,13 +54,13 @@ public class ObjetoManagerImplTest {
 
     @Test
     public void testRegisterUser() {
-        // Se añade un usuario correctamente.
+        logger.info("Se añade un usuario correctamente.");
         Assert.assertEquals(3, this.om.numUsuarios());
         int verificador = this.om.registerUser("Alba", "Serra", "23/06/2001", "albaserra@gmail.com", "23062001");
         Assert.assertEquals(4, this.om.numUsuarios());
         Assert.assertEquals(0, verificador);
 
-        // Ya hay un usuario con ese email.
+        logger.info("Ya hay un usuario con ese email.");
         verificador = this.om.registerUser("El", "Oimoncho", "16/11/2001", "eloimoncho@gmail.com", "16112001");
         Assert.assertEquals(4, this.om.numUsuarios());
         Assert.assertEquals(1, verificador);

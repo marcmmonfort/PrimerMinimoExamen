@@ -21,7 +21,6 @@ import java.util.List;
 
 public class ObjetoService {
 
-
     // ----------------------------------------------------------------------------------------------------
 
     private ObjetoManager om;
@@ -35,17 +34,34 @@ public class ObjetoService {
         }
     }
 
-    /*
+
     // ----------------------------------------------------------------------------------------------------
 
     // OPERACIÓN 1: Registrar un usuario.
-    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // MÉTODO HTTP: POST.
     // ACLARACIONES: "0" se puede, "1" ya hay un usuario con ese mail.
 
-
+    @POST
+    @ApiOperation(value = "Registrar un usuario", notes = "-")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "¡Registrado correctamente!"),
+            @ApiResponse(code = 401, message = "Fallo en el registro. ¡Mail ya existente!")
+    })
+    @Path("/user")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response registrarUsuario(Usuario user) {
+        // String username, String userSurname, String birthDate, String email, String password
+        int verificador = this.om.registerUser(user.getUsername(), user.getUserSurname(), user.getBirthDate(), user.getCredentials().getEmail(), user.getCredentials().getPassword());
+        if (verificador == 0){
+            return Response.status(201).build();
+        }
+        else{
+            return Response.status(401).build();
+        }
+    }
 
     // OPERACIÓN 2: Obtener una lista de usuarios registrados, ordenada por órden alfabético.
-    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // MÉTODO HTTP: GET.
     // ACLARACIONES: -
 
 
@@ -57,25 +73,25 @@ public class ObjetoService {
 
 
     // OPERACIÓN 4: Añadir un nuevo objeto a la tienda.
-    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // MÉTODO HTTP: POST.
     // ACLARACIONES: -
 
 
 
     // OPERACIÓN 5: Obtener una lista de objetos ordenados por precio (de mayor a menor).
-    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // MÉTODO HTTP: GET.
     // ACLARACIONES: -
 
 
 
     // OPERACIÓN 6: Compra de un objeto por parte de un usuario.
-    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // MÉTODO HTTP: PUT.
     // ACLARACIONES: "0" se puede, "1" no existe el usuario, "2" no hay saldo suficiente.
 
 
 
     // OPERACIÓN 7: Obtener una lista de los objetos comprados por un usuario.
-    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // MÉTODO HTTP: GET.
     // ACLARACIONES: -
 
 
@@ -186,7 +202,4 @@ public class ObjetoService {
     }
 
     // ----------------------------------------------------------------------------------------------------
-
-
-     */
 }

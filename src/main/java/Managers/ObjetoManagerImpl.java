@@ -88,7 +88,7 @@ public class ObjetoManagerImpl implements ObjetoManager{
         int loginPossible = 1;
 
         // Búsqueda en el Hashmap de credenciales por si hay alguna que coincide con las nuestras.
-        // "0" se puede, "1" ya hay un usuario con ese mail.
+        // "0" existe, "1" no existe.
 
         int numUsers = this.usuarios.size();
         for (int i=0; i<numUsers; i++){

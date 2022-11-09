@@ -93,7 +93,7 @@ public class ObjetoManagerImpl implements ObjetoManager{
         int numUsers = this.usuarios.size();
         for (int i=0; i<numUsers; i++){
             String idHashmap = Integer.toString(i);
-            if ((this.usuarios.get(idHashmap).getCredentials().getEmail() == email)&&(this.usuarios.get(idHashmap).getCredentials().getPassword() == password)) {
+            if ((Objects.equals(this.usuarios.get(idHashmap).getCredentials().getEmail(), email))&&(Objects.equals(this.usuarios.get(idHashmap).getCredentials().getPassword(), password))) {
                 loginPossible = 0;
             }
         }

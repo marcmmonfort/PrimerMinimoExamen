@@ -81,7 +81,7 @@ public class ObjetoService {
     }
 
     // OPERACIÓN 3: Hacer el login de un usuario.
-    // MÉTODO HTTP: GET / PUT / POST / DELETE.
+    // MÉTODO HTTP: POST.
     // ACLARACIONES: "0" se puede, "1" el login no es correcto.
 
     @POST
@@ -92,13 +92,13 @@ public class ObjetoService {
     })
     @Path("/usuario/login")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response loginUsuario(Credenciales cred) {
-        int verificador = this.om.userLogin(cred.getEmail(), cred.getPassword());
-        if (verificador == 0){
-            return Response.status(201).build();
+    public Response loginUsuario(Credenciales credentials) {
+        int verificador = this.om.userLogin (credentials.getEmail(), credentials.getPassword());
+        if (verificador == 1)  {
+            return Response.status(404).build();
         }
         else{
-            return Response.status(404).build();
+            return Response.status(201).build();
         }
     }
 

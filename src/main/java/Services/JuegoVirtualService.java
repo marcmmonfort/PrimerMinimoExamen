@@ -1,8 +1,7 @@
 package Services;
 
-import Entities.ObjetoTienda;
-import Entities.Usuario;
-import Entities.ValueObjects.Credenciales;
+import Entities.*;
+import Entities.ValueObjects.*;
 import Managers.*;
 
 import io.swagger.annotations.Api;
@@ -16,13 +15,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-
 @Api(value = "/objeto", description = "Endpoint to Objeto Service") // "objeto"
 @Path("/objeto")
 
-public class ObjetoService {
+public class JuegoVirtualService {
 
-    // ----------------------------------------------------------------------------------------------------
+    // NO IMPLEMENTADO.
+    // LO QUE HAY ABAJO ES EL QUE TENIA DE PLANTILLA.
+
+    /*
 
     private ObjetoManager om;
 
@@ -178,4 +179,8 @@ public class ObjetoService {
     }
 
     // ----------------------------------------------------------------------------------------------------
+
+
+     */
 }
+

@@ -8,7 +8,7 @@
 	>> (3) El subpackage "Exceptions" contiene las 4 excepciones.
 	>> (4) La interfaz "JuegoVirtualManager.java" especifica las operaciones necesarias.
 	>> (5) La clase "JuegoVirtualManagerImpl.java" desarrolla estas operaciones necesarias.
-	>> (6) ESTADO: Implementación completa de modelos y estructuras de datos (Manager y ManagerImpl), pero no de las pruebas unitarias (ManagerImplTest).
+	>> (6) ESTADO: Implementación completa de modelos y estructuras de datos (JuegoVirtualManager y JuegoVirtualManagerImpl) y también de las pruebas unitarias (JuegoVirtualManagerImplTest).
 
 >> PARTE II ...
 	>> No implementada.

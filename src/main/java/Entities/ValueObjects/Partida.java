@@ -29,7 +29,9 @@ public class Partida {
         this.partidaEnCurso = true;
     }
 
-    public Partida() {}
+    public Partida() {
+        this.partidaEnCurso = false;
+    }
 
     public void aumentarNivel(String fecha, int nuevosPuntos){
         this.nivelActual = this.nivelActual + 1;
@@ -38,8 +40,14 @@ public class Partida {
         fechaNivel.add(fecha);
     }
 
-    public void finalizarPartida(){
-        this.puntosTotales = this.puntosTotales + 100;
+    public void finalizarPartida(String fecha, int nuevosPuntos){
+        this.puntosTotales = this.puntosTotales + nuevosPuntos + 100;
+        puntosPorNivel.add(nuevosPuntos);
+        fechaNivel.add(fecha);
+        this.partidaEnCurso = false;
+    }
+
+    public void forzarFinPartida(){
         this.partidaEnCurso = false;
     }
 

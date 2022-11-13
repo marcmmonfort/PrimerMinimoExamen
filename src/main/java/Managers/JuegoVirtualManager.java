@@ -51,4 +51,6 @@ public interface JuegoVirtualManager {
     public Partida damePartidaUsuario(String usuarioId);
 
     public void crearUsuario(String usuario);
+
+    public int size();
 }

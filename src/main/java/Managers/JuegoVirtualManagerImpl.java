@@ -34,6 +34,13 @@ public class JuegoVirtualManagerImpl implements JuegoVirtualManager{
     }
 
     @Override
+    public int size() {
+        int ret = this.usuarios.size();
+        logger.info("Size: " + ret);
+        return ret;
+    }
+
+    @Override
     public int numUsuarios(){
         return this.usuarios.size();
     }
@@ -102,7 +109,7 @@ public class JuegoVirtualManagerImpl implements JuegoVirtualManager{
             logger.warn("El usuario "+usuarioId+" no está jugando ninguna partida.");
             throw new UsuarioIdNoEstaEnPartidaException();
         } else if (!this.usuarios.containsKey(usuarioId)) {
-            logger.warn("El usuario "+usuarioId+" no existe.");
+            logger.warn("El usuario " + usuarioId + " no existe.");
             throw new UsuarioIdNoExisteException();
         } else {
             int nivelActual = partidasUsuarios.get(usuarioId).getNivelActual();

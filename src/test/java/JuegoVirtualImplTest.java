@@ -74,6 +74,10 @@ public class JuegoVirtualImplTest {
 
     @Test
     public void test_PedirNiveles_PedirPuntos_PasarDeNivel() throws UsuarioIdNoEstaEnPartidaException, JuegoIdNoExisteException, UsuarioIdNoExisteException, UsuarioIdYaEstaEnPartidaException {
+        Assert.assertThrows(UsuarioIdNoEstaEnPartidaException.class, ()-> this.jvm.pedirNivelJuegoDePartida("Marc"));
+        Assert.assertThrows(UsuarioIdNoEstaEnPartidaException.class, ()-> this.jvm.pedirPuntosDePartida("Marc"));
+        Assert.assertThrows(UsuarioIdNoEstaEnPartidaException.class, ()->  this.jvm.pasarDeNivel("Marc", 50, "01/01/2022"));
+
         // Iniciamos la partida: entramos en el nivel 1 de los 4 que tiene GTA.
         this.jvm.iniciarPartida("GTA", "Marc");
         Assert.assertEquals(1, this.jvm.pedirNivelJuegoDePartida("Marc"));
@@ -81,6 +85,7 @@ public class JuegoVirtualImplTest {
 
         // Pasamos al nivel 2.
         this.jvm.pasarDeNivel("Marc", 50, "01/01/2022");
+        Assert.assertThrows(UsuarioIdNoExisteException.class, ()->  this.jvm.pasarDeNivel("Mark", 50, "01/01/2022"));
         Assert.assertEquals(2, this.jvm.pedirNivelJuegoDePartida("Marc"));
         Assert.assertEquals(100, this.jvm.pedirPuntosDePartida("Marc"));
 
@@ -99,8 +104,13 @@ public class JuegoVirtualImplTest {
         Assert.assertEquals(false, this.jvm.damePartidaUsuario("Marc").isPartidaEnCurso());
     }
 
+    // OPERACION 6: Finalizar una Partida.
+    // EXCEPCIONES: UsuarioIdNoExisteException, UsuarioIdNoEstaEnPartidaException.
+
     @Test
     public void testFinalizarPartida() throws UsuarioIdNoEstaEnPartidaException, JuegoIdNoExisteException, UsuarioIdNoExisteException, UsuarioIdYaEstaEnPartidaException {
+        Assert.assertThrows(UsuarioIdNoEstaEnPartidaException.class, ()-> this.jvm.finalizarPartida("Marc"));
+
         // Iniciamos la partida: entramos en el nivel 1 de los 4 que tiene GTA.
         this.jvm.iniciarPartida("GTA", "Marc");
 
@@ -113,6 +123,7 @@ public class JuegoVirtualImplTest {
         // Forzamos que se acabe la partida.
         Assert.assertEquals(0, this.jvm.dameUsuario("Marc").getPartidasJugadas().size());
         Assert.assertEquals(true, this.jvm.damePartidaUsuario("Marc").isPartidaEnCurso());
+        Assert.assertThrows(UsuarioIdNoExisteException.class, ()-> this.jvm.finalizarPartida("Mark"));
         this.jvm.finalizarPartida("Marc");
         Assert.assertEquals(1, this.jvm.dameUsuario("Marc").getPartidasJugadas().size());
         Assert.assertEquals(false, this.jvm.damePartidaUsuario("Marc").isPartidaEnCurso());
@@ -148,11 +159,11 @@ public class JuegoVirtualImplTest {
         // Comprobamos que obtenemos las partidas que ha jugado un cierto usuario.
         Assert.assertEquals("FIFA",this.jvm.obtenerPartidasUsuario("Marc").get(0).getJuegoId());
         Assert.assertEquals("GTA",this.jvm.obtenerPartidasUsuario("Marc").get(1).getJuegoId());
-    }
 
-    // OPERACION 9: Obtener información sobre las Partidas de un Usuario en un cierto Juego.
-    // ESTRUCTURA: public InfoPartida obtenerInfoUsuarioJuego(String juegoId, String usuarioId);
-    // EXCEPTIONS: -
+        // Comprobamos el funcionamiento de las excepciones.
+        Assert.assertThrows(JuegoIdNoExisteException.class, ()-> this.jvm.obtenerHistorialUsuariosDeJuego("FORMULA 1"));
+        Assert.assertThrows(UsuarioIdNoExisteException.class, ()-> this.jvm.obtenerPartidasUsuario("Mark"));
+    }
 
     @Test
     public void testObtenerInfoUsuarioJuego() throws UsuarioIdNoEstaEnPartidaException, JuegoIdNoExisteException, UsuarioIdNoExisteException, UsuarioIdYaEstaEnPartidaException {

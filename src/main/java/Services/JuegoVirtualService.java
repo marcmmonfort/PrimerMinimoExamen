@@ -1,24 +1,100 @@
 package Services;
 
-import Entities.*;
-import Entities.ValueObjects.*;
 import Managers.*;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Api(value = "/objeto", description = "Endpoint to Objeto Service") // "objeto"
 @Path("/objeto")
 
 public class JuegoVirtualService {
+
+    private JuegoVirtualManager jvm;
+
+    public JuegoVirtualService() {
+        this.jvm = JuegoVirtualManagerImpl.getInstance();
+        if (jvm.size()==0) {
+            this.jvm.crearJuego("FIFA", "Juego de fútbol", 2);
+            this.jvm.crearJuego("GTA", "Juego de vida real", 4);
+            this.jvm.crearJuego("Gran Turismo", "Juego de conducción", 5);
+
+            this.jvm.crearUsuario("Marc");
+            this.jvm.crearUsuario("Victor");
+            this.jvm.crearUsuario("Eloi");
+        }
+    }
+
+    // OPERACION 1: Crear un Juego.
+    // MÉTODO HTTP: POST.
+    // ESTRUCTURA: public void crearJuego(String juegoId, String juegoDescripcion, int numeroNivelesJuego);
+    // EXCEPCIONES: -
+
+
+
+    // OPERACION 2: Iniciar una Partida (por parte de un Usuario).
+    // MÉTODO HTTP: PUT.
+    // ESTRUCTURA: public void iniciarPartida (String juegoId, String usuarioId);
+    // EXCEPCIONES: JuegoIdNoExisteException, UsuarioIdNoExisteException, UsuarioIdYaEstaEnPartidaException.
+
+
+
+    // OPERACION 3: Pedir el Nivel Actual de la Partida en la que está el Usuario introducido.
+    // MÉTODO HTTP: GET.
+    // ESTRUCTURA: public int pedirNivelJuegoDePartida (String usuarioId);
+    // EXCEPCIONES: UsuarioIdNoExisteException, UsuarioIdNoEstaEnPartidaException.
+
+
+
+    // OPERACION 4: Pedir la Puntuación Actual en una Partida (por parte de un Usuario).
+    // MÉTODO HTTP: GET.
+    // ESTRUCTURA: public int pedirPuntosDePartida(String usuarioId);
+    // EXCEPCIONES: UsuarioIdNoExisteException, UsuarioIdNoEstaEnPartidaException.
+
+
+
+    // OPERACION 5: Pasar de Nivel en una Partida.
+    // MÉTODO HTTP: PUT.
+    // ESTRUCTURA: public void pasarDeNivel(String usuarioId, int puntosLogrados, String fechaCambioNivel);
+    // EXCEPCIONES: UsuarioIdNoExisteException, UsuarioIdNoEstaEnPartidaException.
+
+
+
+    // OPERACION 6: Finalizar una Partida.
+    // MÉTODO HTTP: PUT.
+    // ESTRUCTURA: public void finalizarPartida(String usuarioId);
+    // EXCEPCIONES: UsuarioIdNoExisteException, UsuarioIdNoEstaEnPartidaException.
+
+
+
+    // OPERACION 7: Obtener los Usuarios que han jugado un cierto Juego ordenados por Puntos (de mayor a menor).
+    // MÉTODO HTTP: GET.
+    // ESTRUCTURA: public List<Usuario> obtenerHistorialUsuariosDeJuego(String juegoId);
+    // EXCEPCIONES: JuegoIdNoExisteException.
+
+
+
+    // OPERACION 8: Obtener las Partidas en las que ha jugado un Usuario.
+    // MÉTODO HTTP: GET.
+    // ESTRUCTURA: public List<Partida> obtenerPartidasUsuario(String usuarioId);
+    // EXCEPCIONES: UsuarioIdNoExisteException.
+
+
+
+    // OPERACION 9: Obtener información sobre las Partidas de un Usuario en un cierto Juego.
+    // MÉTODO HTTP: GET.
+    // ESTRUCTURA: public InfoPartida obtenerInfoUsuarioJuego(String juegoId, String usuarioId);
+    // EXCEPCIONES: -
+
+
+
+
+
+
+
+
+    // ----------------------------------------------------------------------------------------------------
 
     // NO IMPLEMENTADO.
     // LO QUE HAY ABAJO ES EL QUE TENIA DE PLANTILLA.

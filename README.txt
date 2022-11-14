@@ -12,4 +12,4 @@
 	>> (7) Implementación también de las pruebas unitarias (JuegoVirtualManagerImplTest).
 
 >> PARTE II ...
-	>> No implementada.
+	>> Servicio API REST implementado.
